@@ -5,19 +5,17 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-22.04
-
-    steps:
-    - uses: actions/checkout@v4
+    steps: 
+    - uses: actions/checkout@v1
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build
-      uses: docker/build-push-action@v6
-      with:
-        file: Dockerfile.mingw
-        context: .
-        outputs: type=local,dest=./output
+      run: |
+        docker build -t a2w:x64 -f Dockerfile.mingw .
+    - name: get aria
+      run: |
+        docker run -d --name cpa2w a2w:x64 /bin/bash
+        docker cp cpa2w:/aria2/src/aria2c.exe .
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: ariac2-mingw
-        path: ./output/aria2/src/aria2c.exe
+        name: aria
+        path: ./aria2c.exe
