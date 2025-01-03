@@ -16,10 +16,8 @@ jobs:
         file: Dockerfile.mingw
         context: .
         outputs: type=local,dest=./output
-    - name: Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
       with:
-        files: ./output/aria2/src/aria2c.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: ariac2-mingw
+        path: ./output/aria2/src/aria2c.exe
