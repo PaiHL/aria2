@@ -147,6 +147,8 @@ const char KEY_NUM_ACTIVE[] = "numActive";
 const char KEY_NUM_STOPPED_TOTAL[] = "numStoppedTotal";
 const char KEY_VERIFIED_LENGTH[] = "verifiedLength";
 const char KEY_VERIFY_PENDING[] = "verifyIntegrityPending";
+const char KEY_SESSION_DOWNLOAD_LENGTH[] = "sessionDownloadLength";
+const char KEY_SESSION_UPLOAD_LENGTH[] = "sessionUploadLength";
 } // namespace
 
 namespace {
@@ -639,6 +641,12 @@ void gatherProgressCommon(Dict* entryDict,
   }
   if (requested_key(keys, KEY_UPLOAD_LENGTH)) {
     entryDict->put(KEY_UPLOAD_LENGTH, util::itos(stat.allTimeUploadLength));
+  }
+  if (requested_key(keys, KEY_SESSION_DOWNLOAD_LENGTH)) {
+    entryDict->put(KEY_SESSION_DOWNLOAD_LENGTH, util::itos(stat.sessionDownloadLength));
+  }
+  if (requested_key(keys, KEY_SESSION_UPLOAD_LENGTH)) {
+    entryDict->put(KEY_SESSION_UPLOAD_LENGTH, util::itos(stat.sessionUploadLength));
   }
   if (requested_key(keys, KEY_CONNECTIONS)) {
     entryDict->put(KEY_CONNECTIONS, util::itos(group->getNumConnection()));
