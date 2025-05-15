@@ -901,6 +901,11 @@ void gatherStoppedDownload(Dict* entryDict,
   if (requested_key(keys, KEY_UPLOAD_LENGTH)) {
     entryDict->put(KEY_UPLOAD_LENGTH, util::itos(ds->uploadLength));
   }
+  if (requested_key(keys, KEY_SESSION_DOWNLOAD_LENGTH)) {
+    A2_LOG_DEBUG("Processing KEY_SESSION_DOWNLOAD_LENGTH for stopped download");
+    entryDict->put(KEY_SESSION_DOWNLOAD_LENGTH,
+                   util::itos(ds->sessionDownloadLength));
+  }
   if (requested_key(keys, KEY_BITFIELD)) {
     if (!ds->bitfield.empty()) {
       entryDict->put(KEY_BITFIELD, util::toHex(ds->bitfield));
