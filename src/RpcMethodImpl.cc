@@ -619,6 +619,13 @@ void gatherProgressCommon(Dict* entryDict,
                           const std::shared_ptr<RequestGroup>& group,
                           const std::vector<std::string>& keys)
 {
+  // 添加调试日志，打印请求的keys
+  std::string keyStr;
+  for (const auto& key : keys) {
+    keyStr += key + ",";
+  }
+  A2_LOG_DEBUG(fmt("RPC requested keys: [%s]", keyStr.c_str()));
+
   auto& ps = group->getPieceStorage();
   if (requested_key(keys, KEY_GID)) {
     entryDict->put(KEY_GID, GroupId::toHex(group->getGID()).c_str());
@@ -642,11 +649,20 @@ void gatherProgressCommon(Dict* entryDict,
   if (requested_key(keys, KEY_UPLOAD_LENGTH)) {
     entryDict->put(KEY_UPLOAD_LENGTH, util::itos(stat.allTimeUploadLength));
   }
+  // 添加日志检查session统计数据
+  A2_LOG_DEBUG(fmt("Session stats - Download: %lld, Upload: %lld",
+                   stat.sessionDownloadLength, stat.sessionUploadLength));
+
+  // 在处理session相关字段前添加日志
   if (requested_key(keys, KEY_SESSION_DOWNLOAD_LENGTH)) {
-    entryDict->put(KEY_SESSION_DOWNLOAD_LENGTH, util::itos(stat.sessionDownloadLength));
+    A2_LOG_DEBUG("Processing KEY_SESSION_DOWNLOAD_LENGTH");
+    entryDict->put(KEY_SESSION_DOWNLOAD_LENGTH,
+                   util::itos(stat.sessionDownloadLength));
   }
   if (requested_key(keys, KEY_SESSION_UPLOAD_LENGTH)) {
-    entryDict->put(KEY_SESSION_UPLOAD_LENGTH, util::itos(stat.sessionUploadLength));
+    A2_LOG_DEBUG("Processing KEY_SESSION_UPLOAD_LENGTH");
+    entryDict->put(KEY_SESSION_UPLOAD_LENGTH,
+                   util::itos(stat.sessionUploadLength));
   }
   if (requested_key(keys, KEY_CONNECTIONS)) {
     entryDict->put(KEY_CONNECTIONS, util::itos(group->getNumConnection()));
