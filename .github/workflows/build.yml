@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-14]
+        os: [ubuntu-16.04, macos-14, macos-13]
         compiler: [gcc, clang]
         crypto: [openssl, gnutls]
         bittorrent: [with-bt, without-bt]
@@ -99,4 +99,12 @@ jobs:
           --disable-nls
     - name: Build aria2
       run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
+        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check \
+          ls -lah \
+          ls -lah src/
+          file src/aria2c
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: aria
+        path: src/aria2c
