@@ -29,8 +29,7 @@ jobs:
           zlib1g-dev \
           libsqlite3-dev \
           libssh2-1-dev \
-          libcppunit-dev \
-          python3-docutils
+          libcppunit-dev
     - name: Setup gcc (Linux)
       run: |
         echo 'CC=gcc-12' >> $GITHUB_ENV
