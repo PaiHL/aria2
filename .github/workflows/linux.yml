@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-22.04-arm]
+        os: [ubuntu-22.04, ubuntu-22.04-arm]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -52,8 +52,6 @@ jobs:
     - name: Build aria2
       run: |
         make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
-          ls -lah
-          ls -lah src
           file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
