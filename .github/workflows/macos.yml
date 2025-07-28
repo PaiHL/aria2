@@ -31,14 +31,30 @@ jobs:
         echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
     - name: Configure autotools (macOS)
       run: |
-        ./configure \
-          --without-openssl --without-gnutls --with-appletls \
+        ./configure  --enable-static \
+          --disable-shared \
+          --enable-metalink \
+          --enable-bittorrent \
           --disable-nls \
+          --with-appletls \
+          --with-libgmp \
+          --with-sqlite3 \
+          --with-libz \
+          --with-libexpat \
+          --with-libcares \
+          --with-libgcrypt \
+          --with-libssh2 \
+          --without-libuv \
+          --without-gnutls \
+          --without-openssl \
+          --without-libnettle \
+          --without-libxml2 \
           ARIA2_STATIC=yes
     - name: Build aria2
       run: |
         make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
-          file src/aria2c
+        otool -L src/aria2c
+        file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
