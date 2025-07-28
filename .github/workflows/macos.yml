@@ -1,0 +1,49 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-14, macos-13]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: MacOS setup
+      run: |
+        brew install cppunit gettext openssl libssh2 c-ares sqlite3 \
+          autoconf automake pkg-config libtool
+    - name: Setup clang (MacOS)
+      run: |
+        echo 'CC=clang' >> $GITHUB_ENV
+        echo 'CXX=clang++' >> $GITHUB_ENV
+    - name: Libtool
+      run: |
+        autoreconf -i
+    - name: Setup compiler flags
+      run: |
+        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+
+        CPPFLAGS="$asanflags -g3"
+        LDFLAGS="$asanflags"
+
+        echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
+        echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
+    - name: Configure autotools (macOS)
+      run: |
+        ./configure \
+          --without-openssl --without-gnutls --with-appletls \
+          --disable-nls
+    - name: Build aria2
+      run: |
+        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check \
+          ls -lah \
+          ls -lah src/
+          file src/aria2c
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: aria
+        path: src/aria2c

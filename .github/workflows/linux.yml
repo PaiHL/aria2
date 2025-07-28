@@ -1,0 +1,62 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-22.04-arm]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Linux setup
+      run: |
+        sudo apt-get update
+        sudo apt-get install \
+          g++-12 \
+          clang-15 \
+          autoconf \
+          automake \
+          autotools-dev \
+          autopoint \
+          libtool \
+          pkg-config \
+          libssl-dev \
+          libgnutls28-dev \
+          libc-ares-dev \
+          zlib1g-dev \
+          libsqlite3-dev \
+          libssh2-1-dev \
+          libcppunit-dev
+    - name: Setup gcc (Linux)
+      run: |
+        echo 'CC=gcc-12' >> $GITHUB_ENV
+        echo 'CXX=g++-12' >> $GITHUB_ENV
+    - name: Libtool
+      run: |
+        autoreconf -i
+    - name: Setup compiler flags
+      run: |
+        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+
+        CPPFLAGS="$asanflags -g3"
+        LDFLAGS="$asanflags"
+
+        echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
+        echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
+    - name: Configure autotools (Linux, openssl)
+      run: |
+        ./configure --without-gnutls --with-openssl $FEATURE_FLAGS
+    - name: Build aria2
+      run: |
+        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check \
+          ls -lah \
+          ls -lah src/
+          file src/aria2c
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: aria
+        path: src/aria2c
