@@ -33,7 +33,8 @@ jobs:
       run: |
         ./configure \
           --without-openssl --without-gnutls --with-appletls \
-          --disable-nls
+          --disable-nls \
+          ARIA2_STATIC=yes
     - name: Build aria2
       run: |
         make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
