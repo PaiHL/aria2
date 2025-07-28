@@ -1,4 +1,4 @@
-name: build
+name: macos
 
 on: [push, pull_request]
 
@@ -38,9 +38,9 @@ jobs:
           --disable-nls
     - name: Build aria2
       run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check \
-          ls -lah \
-          ls -lah src/
+        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
+          ls -lah
+          ls -lah src
           file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
