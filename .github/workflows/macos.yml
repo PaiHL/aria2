@@ -41,5 +41,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: aria
+        name: aria_${{ matrix.os }}
         path: src/aria2c
