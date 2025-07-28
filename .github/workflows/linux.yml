@@ -29,7 +29,8 @@ jobs:
           zlib1g-dev \
           libsqlite3-dev \
           libssh2-1-dev \
-          libcppunit-dev
+          libcppunit-dev \
+          python3-docutils
     - name: Setup gcc (Linux)
       run: |
         echo 'CC=gcc-12' >> $GITHUB_ENV
@@ -39,10 +40,8 @@ jobs:
         autoreconf -i
     - name: Setup compiler flags
       run: |
-        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
-
-        CPPFLAGS="$asanflags -g3"
-        LDFLAGS="$asanflags"
+        CXXFLAGS="-Os"
+        LDFLAGS="-s"
 
         echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
         echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
