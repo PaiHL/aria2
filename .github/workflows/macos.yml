@@ -35,6 +35,7 @@ jobs:
       run: |
         cd build
         ln -s ../makerelease-osx-v2.mk ./Makefile
+        ln -s ../configure.ac ./configure.ac
         make ARCH=${{ matrix.architecture }}
         strip aria2-def/bin/aria2c
         upx aria2-def/binc/aria2c
