@@ -14,8 +14,10 @@ jobs:
     - name: Build aria2
       run: |
         mkdir build-release && cd build-release
+        cp ../depends/macos/* ./
         ln -s ../makerelease-osx.mk Makefile
         export NON_RELEASE=1
+        ls -lah
         make aria2.build
         ls -lah
     - name: Upload artifact
