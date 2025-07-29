@@ -14,7 +14,7 @@ jobs:
     - name: MacOS setup
       run: |
         brew update
-        brew install m4 autoconf automake autotools-dev autopoint libtool pkg-config 
+        brew install m4 autoconf automake libtool pkg-config 
           libssl-dev \
           libc-ares-dev \
           libxml2-dev
