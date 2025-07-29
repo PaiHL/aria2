@@ -21,10 +21,6 @@ jobs:
       run: |
         echo 'CC=clang' >> $GITHUB_ENV
         echo 'CXX=clang++' >> $GITHUB_ENV
-        echo 'ARCHFLAGS=-arch arm64 -mmacosx-version-min=11.0' >> $GITHUB_ENV
-        echo 'SDKROOT=$(xcrun --sdk macosx --show-sdk-path)' >> $GITHUB_ENV
-        echo 'CPPFLAGS=-I/opt/homebrew/include -I/opt/homebrew/opt/sqlite/include -I$(xcrun --sdk macosx --show-sdk-path)/usr/include $ARCHFLAGS' >> $GITHUB_ENV
-        echo 'LDFLAGS=-L/opt/homebrew/lib -L/opt/homebrew/opt/sqlite/lib $ARCHFLAGS' >> $GITHUB_ENV
     - name: Libtool
       run: |
         autoreconf -i
