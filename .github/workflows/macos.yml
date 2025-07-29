@@ -54,8 +54,7 @@ jobs:
           --without-openssl \
           --without-libnettle \
           --without-libxml2 \
-          ARIA2_STATIC=yes \
-          LIBS="-lgmp -lsqlite3 -lz -lexpat -lcares -lgcrypt -lssh2"
+          ARIA2_STATIC=yes
     - name: Build aria2
       run: |
         make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
