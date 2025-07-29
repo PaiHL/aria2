@@ -14,9 +14,9 @@ jobs:
     - name: MacOS setup
       run: |
         brew update
+        brew install m4 autoconf automake pkg-config libtool gettext cppunit
         brew reinstall --build-from-source \
-          cppunit gettext openssl libssh2 c-ares sqlite3 \
-          autoconf automake pkg-config libtool gmp expat libgcrypt
+          openssl libssh2 c-ares sqlite3 gmp expat libgcrypt
     - name: Setup clang (MacOS)
       run: |
         echo 'CC=clang' >> $GITHUB_ENV
