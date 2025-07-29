@@ -188,8 +188,13 @@ all::
 # intermediates and remove them when the build completes. Thanks gmake!
 .PRECIOUS: %.tar.gz
 %.tar.gz:
-	curl -o $@ -A 'curl/0; like wget' -L \
-		$($(basename $(basename $@))_url)
+	@if [ ! -f $@ ]; then \
+		echo "Downloading $@ ..."; \
+		curl -o $@ -A 'curl/0; like wget' -L \
+			$($(basename $(basename $@))_url); \
+	else \
+		echo "$@ already exists, skipping download."; \
+	fi
 
 .PRECIOUS: %.check
 %.check: %.tar.gz
