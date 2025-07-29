@@ -281,8 +281,11 @@ aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.bui
 	$(eval DEST := $$(basename $$@))
 	$(eval ARCH := $$(subst .,,$$(suffix $$(DEST))))
 	
+	cd $(SRCDIR)
+	autoreconf -i
+
 	mkdir -p $(DEST)
-	( cd $(DEST) && autoreconf -i && ./configure \
+	( cd $(DEST) && ./$(SRCDIR)/configure \
 		--prefix=$(ARIA2_PREFIX) \
 		--bindir=$(PWD)/$(DEST) \
 		--sysconfdir=/etc \
