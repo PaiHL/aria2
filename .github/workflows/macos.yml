@@ -14,11 +14,10 @@ jobs:
     - name: Build aria2
       run: |
         mkdir build-release && cd build-release
-        ln -s ../makerelease-osx.mk Makefile  
-        make
+        ln -s ../makerelease-osx.mk Makefile
+        export NON_RELEASE=1
+        make aria2.build
         ls -lah
-        otool -L src/aria2c
-        file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
