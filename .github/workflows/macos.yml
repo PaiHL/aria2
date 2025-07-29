@@ -6,62 +6,30 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-14, macos-13]
+        include:
+          - os: macos-14
+            architecture: arm64
+          - os: macos-13
+            architecture: x86_64
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4
     - name: MacOS setup
       run: |
-        brew install autoconf automake pkg-config libtool upx
-        brew reinstall --build-from-source zlib expat c-ares sqlite3 gmp libgpg-error libgcrypt cppunit gettext openssl libssh2
-    - name: Setup clang (MacOS)
-      run: |
-        echo 'CC=clang' >> $GITHUB_ENV
-        echo 'CXX=clang++' >> $GITHUB_ENV
-    - name: Libtool
-      run: |
-        autoreconf -i
-    - name: Setup compiler flags
-      run: |
-        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
-
-        LDFLAGS="$asanflags";
-        CPPFLAGS="$asanflags -O2";
-
-        echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
-        echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
-    - name: Configure autotools (macOS)
-      run: |
-        ./configure \
-          --enable-static \
-          --disable-shared \
-          --enable-metalink \
-          --enable-bittorrent \
-          --disable-nls \
-          --with-appletls \
-          --with-libgmp \
-          --with-sqlite3 \
-          --with-libz \
-          --with-libexpat \
-          --with-libcares \
-          --with-libgcrypt \
-          --with-libssh2 \
-          --without-libuv \
-          --without-gnutls \
-          --without-openssl \
-          --without-libnettle \
-          --without-libxml2 \
-          ARIA2_STATIC=yes
+        brew install autoconf automake wget
     - name: Build aria2
       run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
-        strip src/aria2c
-        upx src/aria2c
-        otool -L src/aria2c
-        file src/aria2c
+        mkdir build && cd build
+        ln -s ../makerelease-osx-v2.mk ./Makefile
+        make ARCH=${{ matrix.architecture }}
+        strip aria2-def/bin/aria2c
+        upx aria2-def/binc/aria2c
+        otool -L aria2-def/bin/aria2c
+        file aria2-def/bin/aria2c
+        cp aria2-def/bin/aria2c ../aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: aria_${{ matrix.os }}
-        path: src/aria2c
+        path: aria2c
