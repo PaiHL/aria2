@@ -15,6 +15,19 @@ jobs:
       run: |
         mkdir build-release && cd build-release
         cp ../depends/macos/* ./
+        # 为 c-ares 创建正确的文件名  
+        ln -s c-ares-1.15.0.tar.gz cares.tar.gz  
+          
+        # 为其他依赖创建符合脚本期望的文件名  
+        ln -s expat-2.2.8.tar.gz expat.tar.gz  
+        ln -s cppunit-1.12.1.tar.gz cppunit.tar.gz  
+        ln -s gmp-6.1.2.tar.bz2 gmp.tar.bz2  
+        ln -s libgcrypt-1.8.5.tar.bz2 libgcrypt.tar.bz2  
+        ln -s libgpg-error-1.36.tar.bz2 libgpgerror.tar.bz2  
+        ln -s libssh2-1.9.0.tar.gz libssh2.tar.gz  
+        ln -s sqlite-autoconf-3300000.tar.gz sqlite.tar.gz  
+        ln -s zlib-1.2.11.tar.gz zlib.tar.gz
+        
         ln -s ../makerelease-osx.mk Makefile
         export NON_RELEASE=1
         ls -lah
