@@ -280,14 +280,9 @@ $(foreach lib,$(ARCHLIBS),$(eval $(call ARCH_template,$(lib))))
 aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.build libgpgerror.%.build libgcrypt.%.build libssh2.%.build
 	$(eval DEST := $$(basename $$@))
 	$(eval ARCH := $$(subst .,,$$(suffix $$(DEST))))
-	echo "Building aria2"
-	ls -lah
-	echo $(SRCDIR)
-	ls -lah $(SRCDIR)
-	ls -lah ..
-
+	
 	mkdir -p $(DEST)
-	( cd $(DEST) && ../configure \
+	( cd $(DEST) && autoreconf -i && ./configure \
 		--prefix=$(ARIA2_PREFIX) \
 		--bindir=$(PWD)/$(DEST) \
 		--sysconfdir=/etc \
