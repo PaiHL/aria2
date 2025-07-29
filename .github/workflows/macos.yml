@@ -13,58 +13,15 @@ jobs:
     - uses: actions/checkout@v4
     - name: MacOS setup
       run: |
-        brew install gmp cppunit gettext openssl libssh2 c-ares sqlite3 \
-          autoconf automake pkg-config libtool
-    - name: Setup clang (MacOS)
-      run: |
-        echo 'CC=clang' >> $GITHUB_ENV
-        echo 'CXX=clang++' >> $GITHUB_ENV
-    - name: Libtool
-      run: |
-        autoreconf -i
-    - name: Setup compiler flags
-      run: |
-        HOMEBREW_PREFIX="/opt/homebrew"
-
-        export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/lib/pkgconfig:$HOMEBREW_PREFIX/opt/libssh2/lib/pkgconfig:$HOMEBREW_PREFIX/opt/sqlite/lib/pkgconfig"
-
-        export CPPFLAGS="-I$HOMEBREW_PREFIX/include"
-        export CXXFLAGS="-Os -I$HOMEBREW_PREFIX/include"
-        export LDFLAGS="-s -L$HOMEBREW_PREFIX/lib"
-
-        export GMP_CFLAGS="-I$HOMEBREW_PREFIX/opt/gmp/include"
-        export GMP_LIBS="-L$HOMEBREW_PREFIX/opt/gmp/lib -lgmp"
-
-        echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> $GITHUB_ENV
-        echo "CPPFLAGS=$CPPFLAGS" >> $GITHUB_ENV
-        echo "CXXFLAGS=$CXXFLAGS" >> $GITHUB_ENV
-        echo "LDFLAGS=$LDFLAGS" >> $GITHUB_ENV
-        echo "GMP_CFLAGS=$GMP_CFLAGS" >> $GITHUB_ENV
-        echo "GMP_LIBS=$GMP_LIBS" >> $GITHUB_ENV
-    - name: Configure autotools (macOS)
-      run: |
-        ./configure  --enable-static \
-          --disable-shared \
-          --enable-metalink \
-          --enable-bittorrent \
-          --disable-nls \
-          --with-appletls \
-          --with-libgmp \
-          --with-sqlite3 \
-          --with-libz \
-          --with-libexpat \
-          --with-libcares \
-          --with-libgcrypt \
-          --with-libssh2 \
-          --without-libuv \
-          --without-gnutls \
-          --without-openssl \
-          --without-libnettle \
-          --without-libxml2 \
-          ARIA2_STATIC=yes
+        mkdir build-release && cd build-release
+        virtualenv .  
+        . bin/activate
+        pip install sphinx-build
+        ln -s ../makerelease-osx.mk Makefile  
     - name: Build aria2
       run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
+        make
+        ls -lah
         otool -L src/aria2c
         file src/aria2c
     - name: Upload artifact
