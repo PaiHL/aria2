@@ -11,28 +11,61 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: MacOS setup
+      run: |
+        brew update
+        brew reinstall --build-from-source \
+          cppunit gettext openssl libssh2 c-ares sqlite3 \
+          autoconf automake pkg-config libtool gmp expat libgcrypt
+    - name: Setup clang (MacOS)
+      run: |
+        echo 'CC=clang' >> $GITHUB_ENV
+        echo 'CXX=clang++' >> $GITHUB_ENV
+        echo 'ARCHFLAGS=-arch arm64 -mmacosx-version-min=11.0' >> $GITHUB_ENV
+        echo 'SDKROOT=$(xcrun --sdk macosx --show-sdk-path)' >> $GITHUB_ENV
+        echo 'CPPFLAGS=-I/opt/homebrew/include -I/opt/homebrew/opt/sqlite/include -I$(xcrun --sdk macosx --show-sdk-path)/usr/include $ARCHFLAGS' >> $GITHUB_ENV
+        echo 'LDFLAGS=-L/opt/homebrew/lib -L/opt/homebrew/opt/sqlite/lib $ARCHFLAGS' >> $GITHUB_ENV
+    - name: Libtool
+      run: |
+        autoreconf -i
+    - name: Setup compiler flags
+      run: |
+        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
+
+        CPPFLAGS="$asanflags -o2"
+        LDFLAGS="$asanflags"
+
+        echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
+        echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
+    - name: Configure autotools (macOS)
+      run: |
+        ./configure \
+          --enable-static \
+          --disable-shared \
+          --enable-metalink \
+          --enable-bittorrent \
+          --disable-nls \
+          --with-appletls \
+          --with-libgmp \
+          --with-sqlite3 \
+          --with-libz \
+          --with-libexpat \
+          --with-libcares \
+          --with-libgcrypt \
+          --with-libssh2 \
+          --without-libuv \
+          --without-gnutls \
+          --without-openssl \
+          --without-libnettle \
+          --without-libxml2 \
+          ARIA2_STATIC=yes \
+          LIBS="-lgmp -lsqlite3 -lz -lexpat -lcares -lgcrypt -lssh2"
     - name: Build aria2
       run: |
-        mkdir build-release && cd build-release
-        cp ../depends/macos/* ./
-        # 为 c-ares 创建正确的文件名  
-        ln -s c-ares-1.15.0.tar.gz cares.tar.gz  
-          
-        # 为其他依赖创建符合脚本期望的文件名  
-        ln -s expat-2.2.8.tar.gz expat.tar.gz  
-        ln -s cppunit-1.12.1.tar.gz cppunit.tar.gz  
-        ln -s gmp-6.1.2.tar.bz2 gmp.tar.gz  
-        ln -s libgcrypt-1.8.5.tar.bz2 libgcrypt.tar.gz
-        ln -s libgpg-error-1.36.tar.bz2 libgpgerror.tar.gz
-        ln -s libssh2-1.9.0.tar.gz libssh2.tar.gz  
-        ln -s sqlite-autoconf-3300000.tar.gz sqlite.tar.gz  
-        ln -s zlib-1.2.11.tar.gz zlib.tar.gz
-
-        ln -s ../makerelease-osx.mk Makefile
-        export NON_RELEASE=1
-        ls -lah
-        make aria2.build
-        ls -lah
+        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
+        strip -x src/aria2c
+        otool -L src/aria2c
+        file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
