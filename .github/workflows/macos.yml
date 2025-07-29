@@ -14,7 +14,7 @@ jobs:
     - name: MacOS setup
       run: |
         brew install autoconf automake pkg-config libtool upx
-        brew reinstall --build-from-source c-ares zlib cppunit gettext openssl libssh2 c-ares sqlite3 
+        brew reinstall --build-from-source zlib expat c-ares sqlite3 gmp libgpg-error libgcrypt cppunit gettext openssl libssh2
     - name: Setup clang (MacOS)
       run: |
         echo 'CC=clang' >> $GITHUB_ENV
@@ -27,7 +27,7 @@ jobs:
         asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
 
         LDFLAGS="$asanflags";
-        CPPFLAGS="$asanflags -o2";
+        CPPFLAGS="$asanflags -O2";
 
         echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
         echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
