@@ -23,7 +23,7 @@ jobs:
         mkdir build && cd build
         cp ../depends/macos/zlib-1.2.11.tar.gz zlib.tar.gz
         cp ../depends/macos/expat-2.2.8.tar.gz expat.tar.gz
-        cp ../depends/macos/c-ares-1.15.0.tar.gz c-ares.tar.gz
+        cp ../depends/macos/c-ares-1.15.0.tar.gz cares.tar.gz
         cp ../depends/macos/sqlite-autoconf-3300000.tar.gz sqlite.tar.gz
         cp ../depends/macos/gmp-6.3.0.tar.bz2 gmp.tar.gz
         cp ../depends/macos/libgpg-error-1.36.tar.bz2 libgpgerror.tar.gz
