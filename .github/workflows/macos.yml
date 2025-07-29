@@ -11,15 +11,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: MacOS setup
-      run: |
-        mkdir build-release && cd build-release
-        virtualenv .  
-        . bin/activate
-        pip install sphinx-build
-        ln -s ../makerelease-osx.mk Makefile  
     - name: Build aria2
       run: |
+        mkdir build-release && cd build-release
+        ln -s ../makerelease-osx.mk Makefile  
         make
         ls -lah
         otool -L src/aria2c
