@@ -282,6 +282,8 @@ aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.bui
 	$(eval ARCH := $$(subst .,,$$(suffix $$(DEST))))
 	
 	cd $(SRCDIR)
+	echo `pwd`
+	ls -lah
 	autoreconf -i
 
 	mkdir -p $(DEST)
