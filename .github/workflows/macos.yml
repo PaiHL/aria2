@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: MacOS setup
       run: |
-        brew install autoconf automake wget
+        brew install autoconf automake wget libtool
     - name: Dependencies
       run: |
         cp ./depends/macos/zlib-1.2.11.tar.gz zlib.tar.gz
