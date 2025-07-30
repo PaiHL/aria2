@@ -16,7 +16,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install \
           binutils \
-          g++-7 \
+          g++-12 \
           autoconf \
           automake \
           autotools-dev \
@@ -43,12 +43,9 @@ jobs:
 
         CPPFLAGS="$asanflags -O2"
         LDFLAGS="$asanflags"
-        
+
         echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
         echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
-
-        echo 'CXX='"g++-7" >> $GITHUB_ENV
-        echo 'CC='"gcc-7" >> $GITHUB_ENV
     - name: Configure autotools (Linux, openssl)
       run: |
         ./configure \
