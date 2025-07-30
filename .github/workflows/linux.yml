@@ -55,7 +55,6 @@ jobs:
           --enable-metalink \
           --enable-bittorrent \
           --disable-nls \
-          --with-appletls \
           --with-libgmp \
           --with-sqlite3 \
           --with-libz \
