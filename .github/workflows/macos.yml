@@ -35,7 +35,7 @@ jobs:
         ln -s ./makerelease-osx-v2.mk ./Makefile
         make ARCH=${{ matrix.architecture }}
         strip aria2-def/bin/aria2c
-        upx aria2-def/binc/aria2c
+        upx aria2-def/bin/aria2c
         otool -L aria2-def/bin/aria2c
         file aria2-def/bin/aria2c
         cp aria2-def/bin/aria2c ../aria2c
