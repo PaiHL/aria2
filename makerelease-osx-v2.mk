@@ -281,13 +281,13 @@ aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.bui
 	$(eval DEST := $$(basename $$@))
 	$(eval ARCH := $$(subst .,,$$(suffix $$(DEST))))
 	
-	cd ../../$(SRCDIR)
+	cd ../../../$(SRCDIR)
 	echo `pwd`
 	ls -lah
 	autoreconf -i
 
 	mkdir -p $(DEST)
-	( cd $(DEST) && ../../$(SRCDIR)/configure \
+	( cd $(DEST) && ../../../$(SRCDIR)/configure \
 		--prefix=$(ARIA2_PREFIX) \
 		--bindir=$(PWD)/$(DEST) \
 		--sysconfdir=/etc \
