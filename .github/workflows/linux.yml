@@ -17,6 +17,7 @@ jobs:
         sudo apt-get install \
           binutils \
           g++-12 \
+          clang-15 \
           autoconf \
           automake \
           autotools-dev \
@@ -54,13 +55,6 @@ jobs:
           --enable-metalink \
           --enable-bittorrent \
           --disable-nls \
-          --with-libgmp \
-          --with-sqlite3 \
-          --with-libz \
-          --with-libexpat \
-          --with-libcares \
-          --with-libgcrypt \
-          --with-libssh2 \
           --without-libuv \
           --without-gnutls \
           --without-openssl \
