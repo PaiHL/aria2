@@ -37,7 +37,8 @@ jobs:
         strip aria2-def/bin/aria2c
         otool -L aria2-def/bin/aria2c
         file aria2-def/bin/aria2c
-        cp aria2-def/bin/aria2c ../aria2c
+        cp aria2-def/bin/aria2c ./aria2c
+        ls -lah
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
