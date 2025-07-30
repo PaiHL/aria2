@@ -292,9 +292,9 @@ aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.bui
 
 	ls -lah
 	autoreconf -i
-
 	mkdir -p $(DEST)
-	( cd $(DEST) && $(SRCDIR)/configure \
+	ls -lah
+	( cd $(DEST) && $(PWD)/configure \
 		--prefix=$(ARIA2_PREFIX) \
 		--bindir=$(PWD)/$(DEST) \
 		--sysconfdir=/etc \
