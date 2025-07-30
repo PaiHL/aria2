@@ -280,9 +280,16 @@ $(foreach lib,$(ARCHLIBS),$(eval $(call ARCH_template,$(lib))))
 aria2.%.build: zlib.%.build expat.%.build gmp.%.build cares.%.build sqlite.%.build libgpgerror.%.build libgcrypt.%.build libssh2.%.build
 	$(eval DEST := $$(basename $$@))
 	$(eval ARCH := $$(subst .,,$$(suffix $$(DEST))))
-	
-	cd ../../../$(SRCDIR)
+
+	echo $(PWD)
+	echo $(SRCDIR)
+	echo $(DEST)
+	echo $(ARCH)
+	echo $(ARIA2_PREFIX)	
+	cd $(SRCDIR)
 	echo `pwd`
+	echo $(PWD)
+
 	ls -lah
 	autoreconf -i
 
