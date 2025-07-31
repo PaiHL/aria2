@@ -443,6 +443,15 @@ prepare_libssh2() {
 
 build_aria2() {
   echo "============= ARIA2 BUILD START =============="
+  # print current directory
+  echo "Current directory: $(pwd)"
+  # switch to the directory where the script is located
+  cd ${SELF_DIR}
+  # print current directory
+  echo `pwd`
+  ls -lah
+  echo "Building aria2 for ${CROSS_HOST} with prefix ${CROSS_PREFIX}"
+  
   if [ ! -f ./configure ]; then
     autoreconf -i
   fi
