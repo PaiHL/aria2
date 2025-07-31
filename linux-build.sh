@@ -108,7 +108,8 @@ apt install -y g++ \
   autopoint \
   patch \
   wget \
-  unzip
+  unzip \
+  binutils
 
 BUILD_ARCH="$(gcc -dumpmachine)"
 TARGET_ARCH="${CROSS_HOST%%-*}"
@@ -451,16 +452,19 @@ build_aria2() {
   echo `pwd`
   ls -lah
   echo "Building aria2 for ${CROSS_HOST} with prefix ${CROSS_PREFIX}"
+  export CFLAGS="-Os -s"
+  export CXXFLAGS="-Os -s"
+  export LDFLAGS="-s"
   
   if [ ! -f ./configure ]; then
     autoreconf -i
   fi
-  ./configure --host="${CROSS_HOST}" --prefix="${CROSS_PREFIX}" --enable-static --disable-shared --enable-silent-rules ARIA2_STATIC=yes
+  ./configure --host="${CROSS_HOST}" --prefix="${CROSS_PREFIX}" --enable-static --disable-shared --enable-bittorrent --enable-silent-rules ARIA2_STATIC=yes
   make -j$(nproc)
   make install
-  echo "- aria2: source: ${aria2_latest_url:-cached aria2}" >>"${BUILD_INFO}"
   echo >>"${BUILD_INFO}"
   echo "================================================"
+  ${CROSS_HOST}-strip /cross_root/${CROSS_HOST}/bin/aria2c
 }
 
 get_build_info() {

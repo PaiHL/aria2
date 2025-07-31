@@ -32,5 +32,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: aria_${{ matrix.os }}
+        name: aria_${{ matrix.cross_host }}_${{ matrix.use_libressl }}
         path: aria2c
