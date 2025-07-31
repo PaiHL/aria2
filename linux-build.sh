@@ -442,6 +442,7 @@ prepare_libssh2() {
 }
 
 build_aria2() {
+  echo "============= ARIA2 BUILD START =============="
   if [ ! -f ./configure ]; then
     autoreconf -i
   fi
@@ -450,6 +451,7 @@ build_aria2() {
   make install
   echo "- aria2: source: ${aria2_latest_url:-cached aria2}" >>"${BUILD_INFO}"
   echo >>"${BUILD_INFO}"
+  echo "================================================"
 }
 
 get_build_info() {
