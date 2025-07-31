@@ -4,73 +4,31 @@ on: [push, pull_request]
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+    container: "ghcr.io/abcfy2/musl-cross-toolchain-ubuntu:${{ matrix.cross_host }}"
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-22.04-arm]
-    runs-on: ${{ matrix.os }}
-
+        cross_host:
+          # - arm-unknown-linux-musleabi
+          - aarch64-unknown-linux-musl
+          # - loongarch64-unknown-linux-musl
+          # - mips-unknown-linux-musl
+          # - mipsel-unknown-linux-musl
+          # - mips64-unknown-linux-musl
+          - x86_64-unknown-linux-musl
+          # - i686-unknown-linux-musl
     steps:
     - uses: actions/checkout@v4
-    - name: Linux setup
-      run: |
-        sudo apt-get update
-        sudo apt-get install \
-          binutils \
-          g++-12 \
-          clang-15 \
-          autoconf \
-          automake \
-          autotools-dev \
-          autopoint \
-          libtool \
-          pkg-config \
-          libssl-dev \
-          libc-ares-dev \
-          libxml2-dev \
-          zlib1g-dev \
-          libsqlite3-dev \
-          libssh2-1-dev \
-          libcppunit-dev
-    - name: Setup gcc (Linux)
-      run: |
-        echo 'CC=gcc-12' >> $GITHUB_ENV
-        echo 'CXX=g++-12' >> $GITHUB_ENV
-    - name: Libtool
-      run: |
-        autoreconf -i
-    - name: Setup compiler flags
-      run: |
-        asanflags="-fsanitize=address,undefined -fno-sanitize-recover=undefined"
-
-        CPPFLAGS="$asanflags -O2"
-        LDFLAGS="$asanflags"
-
-        echo 'CPPFLAGS='"$CPPFLAGS" >> $GITHUB_ENV
-        echo 'LDFLAGS='"$LDFLAGS" >> $GITHUB_ENV
-    - name: Configure autotools (Linux, openssl)
-      run: |
-        ./configure \
-          --enable-static \
-          --disable-shared \
-          --enable-metalink \
-          --enable-bittorrent \
-          --disable-nls \
-          --without-libuv \
-          --without-gnutls \
-          --without-openssl \
-          --without-libnettle \
-          --without-libxml2 \
-          ARIA2_STATIC=yes
     - name: Build aria2
+      env:
+        CROSS_HOST: "${{ matrix.cross_host }}"
+        USE_LIBRESSL: "${{ matrix.use_libressl }}"
       run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
-        ls -lah src
+        "${GITHUB_WORKSPACE}/linux-build.sh"
         ls -lah
-        strip src/aria2c
-        ldd src/aria2c
-        file src/aria2c
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: aria_${{ matrix.os }}
-        path: src/aria2c
+        path: aria2c
